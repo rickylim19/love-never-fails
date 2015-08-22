@@ -1,0 +1,42 @@
+{% extends 'admin/admin_home.html'%}
+
+{% block adminContent %}
+<form action="/admin/_edit/quote/{{quote_id}}" method="POST">
+    <h2> Quote </h2>
+    <textarea class="form-control"
+              name="content"
+              id="content"
+              rows="5"
+              "autofocus"
+              placeholder="please enter raw text here">{{q and q.quote or ""}}</textarea>
+
+    <br>
+
+    <h2> Source </h2>
+    <textarea class="form-control"
+              name="source"
+              id="source"
+              rows="2"
+              "autofocus"
+              placeholder="please enter raw text here">{{q and q.source or ""}}</textarea>
+    <br>
+
+    <div id="inputs">
+        <button type="submit" class="btn pull-right">Publish</button>
+    </div>
+
+    <br>
+
+</form>
+
+{% if error is defined %}
+<br>
+<br>
+<br>
+<div style="position:float; bottom:0;" class="alert alert-dismissable alert-danger">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    {{error}}
+</div>
+{% endif %}
+
+{% endblock %}

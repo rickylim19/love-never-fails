@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block customcss %}
+    <link href="/css/jumbotron.css" rel="stylesheet">
+    <link href="/css/text.css" rel="stylesheet">
+{% endblock %}
+
+{% block about %} {% endblock %}
+
+{% block internal %} active {% endblock %}
+
+{% block content %}
+
+    <!-- Area for Pages -->
+        <br><br>
+        <br><br>
+        <div class="container">
+            <div class="jumbotron">
+                <!--
+                <h2>
+                    4 Recent Wikis
+                    <br>
+                    <small>
+                        <a href="/admin/odb/?all=True">Show All</a>
+                    </small>
+                </h2>
+                -->
+                <form method='post'>
+                    <div class="input-group">
+                        <input type="search our wiki here" name='search' class="form-control input-lg"
+                               placeholder="Search here">
+
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-default btn-lg" ><i class="fa fa-chevron-right"></i></button>
+                                    </span>
+                    </div>
+                </form>
+                {% if results is defined %}
+                <br>
+                <h2> {{len_results}} of {{results.number_found}} ODB found "{{ query }}" </h2>
+                <br>
+                {% for scored_document in results %}
+
+                <div class="row" style="text-align:center">
+                    {% for f in scored_document.fields%}
+                    {% for expr in scored_document.expressions %}
+                    <a class="brand" href="{{f.value}}" target='_blank'>
+                        {{f.value.strip("/") | replace("admin/internal/", "") | pathformat }}
+                    </a>
+                    <br>
+
+                    {% if expr.name == 'content' %}
+                    {{ expr.value | safe }}
+                    {% endif %}
+                    <br>
+
+                    {% endfor %}
+                    {% endfor %}
+                    <hr>
+                </div>
+                {% endfor %}
+
+                {% endif %}
+
+
+                <br>
+            {%- for page_content in pages | batch(2) %}
+            <div class="row">
+                {%- for path, uname, last_modified, img_key, content in page_content %}
+                    <div class="col-md-6">
+                        <div class="container-fixed">
+                        <h2 class="content-preview" style="text-overflow: ellipsis; overflow: hidden;">
+                            <!-- path or title -->
+                            <a style="color:#000000; text-decoration:none; margin-bottom:3px;" class="brand" href="/admin{{path}}" target='_blank'>
+                                {{path|replace("/internal/", "") | pathformat}}
+                            </a>
+                        </h2>
+                        </div>
+
+                        <date class="date">
+                        <span>Last Modified on {{ last_modified | datetimeformat }}
+
+                                <!-- delete page confirmation -->
+                                {% if admin %}
+                                    <a style="color:#000000" data-href="/admin/_delete/{{path.strip("/")}}" data-toggle="modal"
+                                       data-target="#confirm-delete" href="#">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </a>
+                                {% endif %}
+                        </span>
+                        </date>
+
+
+                        <br>
+                        <div class="container">
+                            {% if img_key %}
+                            <img class="img-responsive img-thumbnail" src='/img{{ path }}?img_id={{img_key}}'>
+                            {% endif %}
+                        </div>
+                        <br>
+                        <p class="content-preview" >
+                            {{content | striptags}}
+                        </p>
+                        <div class="line"><a class="read-more" href="/admin{{path}}" role="button"> More </a></div>
+                        <br><br>
+                    </div>
+                {%- endfor %}
+                <br><br>
+            </div>
+        {% endfor %}
+    </div>
+</div> <!-- The End for Pages -->
+<br><br><br>
+{% endblock %}

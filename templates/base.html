@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Love never Fails</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <!--
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <style>
+        .dropdown-backdrop {
+            position: static;
+        }
+        .footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        /* Set the fixed height of the footer here */
+        height: 100px;
+        background-color: #f5f5f5;
+        }
+    </style>
+
+
+    {% block customcss %}
+    {% endblock %}
+        <!-- Bootstrap core JavaScript
+        ================================================== -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script data-require="jquery@*" data-semver="2.0.3" src="/js/jquery-2.0.3.min.js"></script>
+        <script data-require="bootstrap@*" data-semver="3.1.1" src="/js/bootstrap.min.js"></script>
+
+        <!-- jumper to div segment in the page for about -->
+        <script type="text/javascript">
+                $(document).ready(function() {
+                    $(".jumper").on("click", function( e ) {
+
+                        e.preventDefault();
+
+                        $("body, html").animate({
+                            scrollTop: $( $(this).attr('href') ).offset().top
+                        }, 600);
+                    });
+                    });
+        </script>
+
+    </head>
+
+    <body>
+    <!--
+    <nav class="navbar navbar-default navbar-fixed-top">
+    -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fixed">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+            <a style="color:#000000" class="navbar-brand" href="/" >
+                <span class="glyphicon glyphicon-heart"></span>
+                love never fails
+            </a>
+        </div>
+
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+          {% block about %}
+          <li style="color:#000000" class="{% block internal %}{% endblock %}" id="navAbout">
+              <a style="color:#000000" href="#AboutWiki" class="jumper">
+                  About
+              </a>
+          </li>
+          {% endblock %}
+
+          {% if admin %}
+            <li>
+                <a style="color:#000000" href="/admin/internal">
+                    <i class="fa fa-lock"></i>
+                    Internal
+                </a>
+            </li>
+            <li>
+                <a style="color:#000000" href="/admin/odb/">
+                    <i class="fa fa-leanpub"></i>
+                    ODB
+                </a>
+                </li>
+          {% endif %}
+
+        </ul>
+
+        {% block user %}
+        <ul class="nav navbar-nav navbar-right">
+        {% if admin %}
+        <li class="dropdown">
+            <a style="color:#000000" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                Hi, <b>{{ uname }}</b>
+                <span id="greeting"></span>
+                <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                <li>
+                    <a style="color:#000000" href="/admin/home"><i class="fa fa-fw fa-desktop"></i> Dashboard </a>
+                </li>
+                <li class="divider"></li>
+                <li>
+                    <a style="color:#000000" href="{{admin_logout}}"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
+                </li>
+            </ul>
+        </li>
+        {% else %}
+                <form class="navbar-form navbar-right" action="/admin/home/">
+                  <button type="submit" class="btn btn-default" value="login">
+                      <i class="glyphicon glyphicon-user"></i>
+                      Admin
+                  </button>
+                </form>
+        {% endif %}
+        </ul>
+
+        {% endblock %}
+
+        {% block controls %}
+        {% endblock %}
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+
+    {% block content %}
+    {% endblock %}
+
+
+    <!-- footer -->
+    {% block footContent %}
+
+    <div class="footer" >
+            <br>
+            <p class="text-muted pull-left" style="padding: 10px;">
+                &copy;left: <b>cinta</b>
+            </p>
+    </div>
+
+    {% endblock %}
+
+    <!-- dialog pop-up for delete confirmation -->
+    <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+                </div>
+
+                <div class="modal-body">
+                    <p>You are about to delete one wikipage, this procedure is irreversible!</p>
+                    <p>Do you want to proceed?</p>
+                    <p class="debug-url"></p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <a href="#" class="btn btn-danger danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+        showProcessingMessages: false,
+        tex2jax: { inlineMath: [['$','$'],['\\(','\\)']] },
+        TeX: { equationNumbers: {autoNumber: "AMS"} }
+        });
+	</script>
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	<script type="text/javascript" src="/js/marked.js"></script>
+	<script>
+        marked.setOptions({
+        renderer: new marked.Renderer(),
+        gfm: true,
+        tables: true,
+        breaks: false,
+        pedantic: false,
+        sanitize: false, // IMPORTANT, because we do MathJax before markdown,
+                    //            however we do escaping in 'CreatePreview'.
+        smartLists: true,
+        smartypants: false
+        });
+	</script>
+
+    <script>
+        function switchsize(state) {
+            if (state.matches) {
+            window.Dropcap.layout(dropcap, 2);
+            } else {
+            window.Dropcap.layout(dropcap, 3); }
+            }
+            var dropcap = document.getElementById("dropcap");
+            window.Dropcap.layout(dropcap, 3);
+
+            var narrow = window.matchMedia("screen and (max-width: 600px)");
+            narrow.addListener(switchsize);
+            switchsize(narrow);
+
+    </script>
+
+    {% if admin %}
+        <script>
+            $('#confirm-delete').on('show.bs.modal', function(e) {
+                $(this).find('.danger').attr('href', $(e.relatedTarget).data('href'));
+
+                $('.debug-url').html('Delete URL: <strong>' + $(this).find('.danger').attr('href') + '</strong>');
+            })
+
+            // greeting
+            var greeting;
+            var hour = new Date().getHours();
+            if (hour < 18) {
+                greeting = "Good day!";
+            } else {
+                greeting = "Good evening!";
+            }
+            document.getElementById("greeting").innerHTML = greeting;
+        </script>
+
+
+    {% endif %}
+
+    {% block preview_script %}
+    {% endblock %}
+
+
+  </body>
+</html>

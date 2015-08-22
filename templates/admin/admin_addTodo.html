@@ -1,0 +1,62 @@
+{% extends 'admin/admin_home.html'%}
+
+{% block adminContent %}
+{% if error is defined %}
+<br>
+<div style="position:float; bottom:0;" class="alert alert-dismissable alert-danger">
+    <button type="button" class="close" data-dismiss="alert">×</button>
+    {{error}}
+</div>
+{% endif %}
+<div class="row">
+
+        <div class="col-sm-8 col-sm-offset-2">
+              <br>
+              <form method="post">
+                  <h2> Todo </h2> <code>* Required </code>
+
+                  <input class="form-control input-lg" name="title" id="title"
+                         value = "{{todo and todo.title or ''}}" placeholder="What needs to be done?" autofocus="">
+
+                  <br>
+
+                  <h2> Description </h2>
+                  <textarea class="form-control input-lg" name="description" id="description"
+                      rows="5" placeholder="Please enter description">{{todo and todo.description or ''}}</textarea>
+
+                  <br>
+
+                  <script>
+                        $(function() {
+                            var temp="{{todo and todo.priority or ''}}";
+                            $("#priority").val(temp);
+                            });
+                  </script>
+                  <h2> Priority </h2>
+                  <select class="form-control" name="priority" id="priority">
+                      <option value="1">Urgent!!</option>
+                      <option value="2">Ok</option>
+                      <option value="3">Whenever!</option>
+                  </select>
+                  <br>
+
+                  <h2> Due </h2>
+                  <input class="form-control input-lg" type="date" name="due"
+                          placeholder="dd/mm/yyy" value={{todo and todo.due | datetimeformat}}>
+                  <br>
+
+                  <div id="inputs">
+                      <button type="submit" class="btn pull-right">Add Task</button>
+                  </div>
+
+
+                  <br>
+                  <div class="input-group">
+                  </div>
+              </form>
+        </div><!-- /.col-sm-8 -->
+
+</div><!-- /row -->
+
+
+{% endblock %}

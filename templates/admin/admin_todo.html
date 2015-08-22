@@ -1,0 +1,156 @@
+{% extends 'admin/admin_home.html'%}
+
+{% block adminContent %}
+
+{% if todos %}
+
+    <!-- not completed yet -->
+    <ul class="task-list-fluid">
+    <h1> To-Do List</h1>
+    <p><code>
+        Priority is color-coded:
+         - red (urgent!)
+         - blue (ok)
+         - green (whenever)
+    </code></p>
+    {% for todo in todos %}
+        {% if not todo.completed %}
+            {% if todo.priority == 1 %}
+            <li class="list-group-item list-group-item-danger">
+            {% elif todo.priority == 2 %}
+            <li class="list-group-item list-group-item-info">
+            {% else %}
+            <li class="list-group-item list-group-item-success">
+            {% endif %}
+
+            <div class="task-title-fluid">
+                <span class="task-title-sp-fluid">
+                <a style="color:#000000;" data-href="{{todo.description}}")}}" data-toggle="modal" data-target="#confirm-description" href="#">
+                {{todo.title}}
+                </a>
+                </span>
+                {% if todo.due %}
+                    <span class="badge badge-sm label-success-fluid">due in {{todo.due| day2go}} Days</span>
+                {% endif %}
+                <div class="pull-right hidden-phone-fluid">
+                    <a href="/admin/todocheck/{{todo.key.id()}}" style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-check-circle"></button>
+                    </a>
+                    <a href="/admin/todocheck/uncheck/{{todo.key.id()}}"style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-circle-o"></button>
+                    </a>
+                    <a href="/admin/_edit/todo/{{todo.key.id()}}"style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-pencil"></button>
+                    </a>
+                    <a data-href="/admin/tododelete/{{todo.key.id()}}" data-toggle="modal" data-target="#confirm-delete" href="#"style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-trash-o"></button>
+                    </a>
+                </div>
+            </div>
+            </li>
+
+        {% endif %}
+    {% endfor %}
+            <hr style="border-top: dotted 1px;" />
+    </ul>
+
+    <!-- Completed todo -->
+    <ul id="sortable" class="task-list">
+    <h2> Completed To-Do List </h2>
+    {% for todo in todos %}
+        {% if todo.completed %}
+            {% if todo.priority == 1 %}
+                <li class="list-group-item list-group-item-danger">
+            {% elif todo.priority == 2 %}
+                <li class="list-group-item list-group-item-info">
+            {% else %}
+                <li class="list-group-item list-group-item-success">
+            {% endif %}
+
+           <div class="task-title">
+             <span class="task-title-sp">
+            <strike>
+                <a style="color:#000000" data-href="{{todo.description}}")}}" data-toggle="modal" data-target="#confirm-description" href="#">
+                    {{todo.title}}
+                </a>
+                </strike>
+             </span>
+
+                <div class="pull-right hidden-phone">
+                    <a href="/admin/todocheck/{{todo.key.id()}}"style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-check-circle"></button>
+                    </a>
+                    <a href="/admin/todocheck/uncheck/{{todo.key.id()}}"style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-circle-o"></button>
+                    </a>
+                    <a href="/admin/_edit/todo/{{todo.key.id()}}"style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-pencil"></button>
+                    </a>
+                    <a data-href="/admin/tododelete/{{todo.key.id()}}" data-toggle="modal" data-target="#confirm-delete" href="#"style="text-decoration:none;">
+                        <button class="btn btn-danger btn-xs fa fa-trash-o"></button>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+                </li>
+    </ul>
+
+{% endif %}
+
+<!-- dialog pop-up for delete confirmation -->
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Confirm Delete</h4>
+            </div>
+
+            <div class="modal-body">
+                <p>You are about to delete one wikipage, this procedure is irreversible!</p>
+                <p>Do you want to proceed?</p>
+                <p class="debug-url"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a href="#" class="btn btn-danger danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- dialog pop-up for todo description -->
+<div class="modal fade" id="confirm-description" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Todo Description</h4>
+            </div>
+
+            <div class="modal-body">
+                <!--
+                <p class="description-todo"></p>
+                -->
+                <p class="description"></p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#confirm-description').on('show.bs.modal', function(e) {
+        $(this).find('.description').attr('href', $(e.relatedTarget).data('href'));
+        $('.description').html($(this).find('.description').attr('href'));
+    })
+</script>
+
+{% endblock %}

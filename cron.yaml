@@ -1,0 +1,6 @@
+cron:
+- description: daily fetch odb
+  url: /admin/tasks/odb
+  schedule: every day 00:01
+  timezone: Asia/Singapore
+
